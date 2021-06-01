@@ -8,7 +8,7 @@ class UserController {
   async check(req, res, next) {
     const query = req.query;
     if (!query.id) {
-      return next(ApiError.badRequest("Не задан пароль"));
+      return next(ApiError.badRequest("Не задан ID"));
     }
     res.json(console.log(query.id));
   }
