@@ -1,16 +1,53 @@
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const { User, Basket } = require('../models/models');
+
 const ApiError = require("../error/apiError");
 
+const generateJwt = (id, role, email) => {
+  return jwt.sign({ id, email, role }, process.env.SECRET_KEY, { expiresIn: "24h" });
+}
 class UserController {
-  async registration(req, res) {}
+  async registration(req, res, next) {
+    const { email, password, role } = req.body;
+    if (!email || !password) {
+      return next(ApiError.badRequest('Некорректный email или password'));
+    }
+    const people = await User.findOne({
+      where: { email }
+    })
+    if (people) {
+      return next(ApiError.badRequest('Пользователь с таким email уже существует'))
+    }
+    const hashPassword = await bcrypt.hash(password, 5);
+    const user = await User.create({ email, role, password: hashPassword });
+    const basket = await Basket.create({ userId: user.id });
+    const token = generateJwt(user.id, user.role, user.email);
+    return res.json({ token })
+  }
 
-  async login(req, res) {}
+  async login(req, res, next) {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({
+      where: { email }
+    })
+    if (!user) {
+      return next(ApiError.badRequest("Пользователь не найден !!!"))
+    }
+    let comparePassword = bcrypt.compareSync(password, user.password);
+    if (!comparePassword) {
+      return next(ApiError.badRequest('Неверный пароль !!!'))
+    }
+    const token = generateJwt(user.id, user.role, user.email);
+
+    return res.json({ token })
+  }
 
   async check(req, res, next) {
-    const query = req.query;
-    if (!query.id) {
-      return next(ApiError.badRequest("Не задан ID"));
-    }
-    res.json(console.log(query.id));
+    const { id, role, email } = req.user;
+    const token = generateJwt(id, role, email);
+    return res.json({ token });
   }
 }
 
