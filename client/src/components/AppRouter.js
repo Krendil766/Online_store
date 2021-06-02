@@ -3,9 +3,11 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import { authRoutes, publickRoutes } from "../routes";
 import { TYPE_ROUTER } from "../utils/const";
 import { Context } from "../index";
+import { observable } from "mobx";
 
 const AppRouter = () => {
-  const {user} = useContext(Context);
+  const { user, device } = useContext(Context);
+
   return (
     <Switch>
       {user.isAuth &&
