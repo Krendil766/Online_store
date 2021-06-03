@@ -1,26 +1,29 @@
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, Form } from "react-bootstrap";
 
 const CreateType = ({ show, onHide }) => {
   return (
-    <Modal
-      show={show}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-    >
+    <Modal show={show} onHide={onHide} centered>
       <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">Add type</Modal.Title>
+        <Modal.Title id="contained-modal-title-vcenter">
+          Добавить тип
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <h4>Centered Modal</h4>
-        <p>
-          Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
-          dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac
-          consectetur ac, vestibulum at eros.
-        </p>
+        <Form>
+          <Form.Control
+            // value={value}
+            // onChange={(e) => setValue(e.target.value)}
+            placeholder={"Введите название типа"}
+          />
+        </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button onClick={onHide}>Close</Button>
+        <Button variant="outline-danger" onClick={onHide}>
+          Закрыть
+        </Button>
+        <Button variant="outline-success" onClick={onHide}>
+          Добавить
+        </Button>
       </Modal.Footer>
     </Modal>
   );
