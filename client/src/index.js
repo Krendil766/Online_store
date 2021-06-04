@@ -3,7 +3,8 @@ import ReactDOM from "react-dom";
 
 import App from "./App";
 // import UserStore from "./store/UserStore";
-import store from './store';
+import store from "./store";
+
 
 export const Context = createContext(null);
 

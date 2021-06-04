@@ -1,18 +1,17 @@
-import { observer } from "mobx-react-lite";
-import { useContext } from "react";
+import { useEffect, useState } from "react";
 import { Container, Row, Col, Image, Card, Button } from "react-bootstrap";
 import { useParams } from "react-router-dom";
-import { Context } from "..";
 import bigStar from "../assets/bigStar.png";
+import { fetchOneDevice } from "../http/deviceApi";
 
 const DevicePage = () => {
-  const { id } = useParams();
-  const {
-    device: { devices },
-  } = useContext(Context);
+  const [device, setDevice] = useState({info: []})
+  const {id} = useParams()
+  useEffect(() => {
+      fetchOneDevice(id).then(data => setDevice(data))
+  }, [])
 
-  const deviceItem = devices.filter((item) => item.id === id);
-  const { img, name, rating, price } = deviceItem;
+  const { img, name, rating, price } = device;
 
   return (
     <Container className="mt-3">
@@ -51,7 +50,7 @@ const DevicePage = () => {
               border: "5px solid lightgray",
             }}
           >
-            {/* <h3>От: {device.price} руб.</h3> */}
+            <h3>От: {price} руб.</h3>
             <Button variant={"outline-dark"}>Добавить в корзину</Button>
           </Card>
         </Col>
